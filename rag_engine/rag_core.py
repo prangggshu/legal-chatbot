@@ -1,29 +1,40 @@
 from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
+import re
 
-# Load embedding model (once)
 embedder = SentenceTransformer("all-MiniLM-L6-v2")
 
-# Sample legal clauses (later this comes from uploaded documents)
-clauses = [
-    "The employer may terminate the employee without notice.",
-    "A penalty of fifty thousand rupees applies if the employee resigns early.",
-    "The agreement is governed by Indian law."
-]
+index = None
+chunks_store = []
 
-# Create embeddings
-embeddings = embedder.encode(clauses)
+def build_index(chunks):
+    global index, chunks_store
+    chunks_store = chunks
+    embeddings = embedder.encode(chunks)
+    dimension = embeddings.shape[1]
+    index = faiss.IndexFlatL2(dimension)
+    index.add(np.array(embeddings))
 
-# Store in FAISS
-dimension = embeddings.shape[1]
-index = faiss.IndexFlatL2(dimension)
-index.add(np.array(embeddings))
+def retrieve_clause(query):
+    if index is None:
+        return None, None
 
-def retrieve_clause(question: str) -> str:
-    """
-    Takes a user question and returns the most relevant clause.
-    """
-    q_embedding = embedder.encode([question])
-    D, I = index.search(q_embedding, k=1)
-    return clauses[I[0][0]]
+    q_embedding = embedder.encode([query])
+    distances, indices = index.search(q_embedding, k=1)
+
+    clause_text = chunks_store[indices[0][0]]
+    distance = distances[0][0]
+
+    # Convert distance to confidence score (simple normalization)
+    confidence = float(round(1 / (1 + distance), 2))
+
+
+    return clause_text, confidence
+
+
+def extract_clause_reference(text: str) -> str:
+    match = re.search(r'Clause\s+\d+', text)
+    if match:
+        return match.group()
+    return "Not Available"
