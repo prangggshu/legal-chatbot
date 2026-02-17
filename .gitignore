@@ -65,7 +65,6 @@ uvicorn.log
 # Test & Local Data
 # =========================
 test_docs/
-data/
 uploads/
 
 # =========================
