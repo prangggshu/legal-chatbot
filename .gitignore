@@ -7,13 +7,6 @@ __pycache__/
 *.pyd
 *.so
 
-# =========================
-# Virtual Environment
-# =========================
-venv/
-env/
-.venv/
-
 
 # =========================
 # Model & AI Artifacts
