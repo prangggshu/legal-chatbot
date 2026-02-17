@@ -1,6 +1,6 @@
 import time
-from llm_engine import generate_local_answer
-from gemini_engine import generate_gemini_answer
+from rag_engine.llm_engine import generate_local_answer
+from rag_engine.gemini_engine import generate_gemini_answer
 
 MAX_LOCAL_TIME = 4  # seconds
 

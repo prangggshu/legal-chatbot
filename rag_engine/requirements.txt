@@ -1,6 +1,12 @@
 annotated-doc==0.0.4
 annotated-types==0.7.0
 anyio==4.12.1
+fastapi==0.115.0
+pydantic==2.10.0
+langchain-ollama==0.2.3
+google-generativeai==0.6.0
+python-dotenv==1.0.1
+python-multipart==0.0.6
 brotli==1.2.0
 certifi==2026.1.4
 cffi==2.0.0
@@ -33,7 +39,7 @@ packaging==25.0
 pandas==2.3.3
 pillow==12.0.0
 pycparser==2.23
-pydantic_core==2.41.5
+pydantic_core==2.27.0
 pydyf==0.12.1
 pyphen==0.17.2
 python-dateutil==2.9.0.post0

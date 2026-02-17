@@ -14,11 +14,6 @@ venv/
 env/
 .venv/
 
-# =========================
-# Environment Variables
-# =========================
-.env
-.env.*
 
 # =========================
 # Model & AI Artifacts

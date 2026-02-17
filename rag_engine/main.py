@@ -1,13 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File
 from pydantic import BaseModel
-from rag_core import retrieve_clause
-from fastapi import UploadFile, File
 import shutil
-from document_processor import extract_text, chunk_text
-from rag_core import build_index
-from llm_router import generate_answer
-from risk_engine import detect_risk
-from rag_core import retrieve_clause, extract_clause_reference
+from rag_engine.rag_core import retrieve_clause, build_index, extract_clause_reference
+from rag_engine.document_processor import extract_text, chunk_text
+from rag_engine.risk_engine import detect_risk
+from rag_engine.llm_router import generate_answer
 
 
 app = FastAPI(title="Legal AI Chatbot API")

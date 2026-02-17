@@ -1,15 +1,13 @@
-from google import genai
+import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-client = genai.Client(
-    api_key=os.getenv("GEMINI_API_KEY"),
-    http_options={"api_version": "v1"}
-)
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+client = genai
 
-MODEL_NAME = "models/gemini-2.5-flash"
+MODEL_NAME = "gemini-2.5-flash"
 
 def generate_gemini_answer(context: str, question: str) -> str:
     prompt = f"""
@@ -26,9 +24,7 @@ Question:
 
 Answer clearly.
 """
-    response = client.models.generate_content(
-        model=MODEL_NAME,
-        contents=prompt
-    )
+    model = genai.GenerativeModel(MODEL_NAME)
+    response = model.generate_content(prompt)
 
     return response.text.strip()
