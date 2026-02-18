@@ -1,11 +1,10 @@
-import google.generativeai as genai
+import google.genai as genai
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-client = genai
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 MODEL_NAME = "gemini-2.5-flash"
 
@@ -24,7 +23,9 @@ Question:
 
 Answer clearly.
 """
-    model = genai.GenerativeModel(MODEL_NAME)
-    response = model.generate_content(prompt)
+    response = client.models.generate_content(
+        model=MODEL_NAME,
+        contents=prompt
+    )
 
     return response.text.strip()
