@@ -45,6 +45,7 @@ def chunk_text(text: str):
 
     # Further split large articles into numbered clauses (e.g. 3.14, 6.2)
     final_chunks = []
+    MIN_CHUNK_WORDS = 5
 
     for chunk in chunks:
         sub_chunks = re.split(
@@ -53,7 +54,11 @@ def chunk_text(text: str):
         )
 
         for sc in sub_chunks:
-            if len(sc.split()) > 40:  # ignore tiny fragments
-                final_chunks.append(sc.strip())
+            cleaned = sc.strip()
+            if len(cleaned.split()) >= MIN_CHUNK_WORDS:
+                final_chunks.append(cleaned)
+
+    if not final_chunks:
+        final_chunks = [c.strip() for c in chunks if len(c.strip().split()) >= MIN_CHUNK_WORDS]
 
     return final_chunks

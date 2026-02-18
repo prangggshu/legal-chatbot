@@ -1,4 +1,4 @@
-import google.genai as genai
+from google import genai
 import os
 from dotenv import load_dotenv
 
@@ -29,3 +29,27 @@ Answer clearly.
     )
 
     return response.text.strip()
+
+
+def generate_gemini_fallback_answer(question: str) -> str:
+    prompt = f"""
+You are a legal assistant.
+
+The user asked a legal question that was not found in the local legal knowledge base.
+Answer the question with general legal information in clear language.
+Do not claim to quote the local documents.
+If jurisdiction is unclear, mention that laws vary by jurisdiction.
+
+Question:
+{question}
+"""
+    response = client.models.generate_content(
+        model=MODEL_NAME,
+        contents=prompt
+    )
+
+    return (
+        "Note: This question was not found in the project knowledge base. "
+        "The following is a general Gemini response.\n\n"
+        f"{response.text.strip()}"
+    )

@@ -6,6 +6,9 @@ __pycache__/
 *.pyo
 *.pyd
 *.so
+venv/
+.venv/
+env/
 
 
 # =========================
@@ -54,6 +57,9 @@ uvicorn.log
 # =========================
 test_docs/
 uploads/
+rag_engine/uploads/
+rag_engine/processed/
+legal-bert-finetune/output/
 
 # =========================
 # Node / Frontend (if added later)
@@ -70,4 +76,6 @@ npm-debug.log*
 
 # =========================
 # API
+# =========================
 .env
+.env.*
