@@ -67,3 +67,7 @@ npm-debug.log*
 # Jupyter / Notebooks
 # =========================
 .ipynb_checkpoints/
+
+# =========================
+# API
+.env
