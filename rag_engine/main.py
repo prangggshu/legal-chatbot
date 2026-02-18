@@ -1,6 +1,8 @@
 from fastapi import FastAPI, UploadFile, File
 from pydantic import BaseModel
 import shutil
+import json
+import os
 from rag_engine.rag_core import retrieve_clause, build_index, extract_clause_reference
 from rag_engine.document_processor import extract_text, chunk_text
 from rag_engine.risk_engine import detect_risk
@@ -11,6 +13,31 @@ app = FastAPI(title="Legal AI Chatbot API")
 
 class Question(BaseModel):
     query: str
+
+def load_legal_qa_data():
+    """Load legal Q&A data from legal_qa.json on startup"""
+    qa_file = "legal-bert-finetune/data/legal_qa.json"
+    
+    if os.path.exists(qa_file):
+        try:
+            with open(qa_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            
+            # Extract contexts from Q&A pairs
+            contexts = [item["context"] for item in data]
+            
+            # Build FAISS index with these contexts
+            build_index(contexts)
+            return True
+        except Exception as e:
+            return False
+    else:
+        return False
+
+@app.on_event("startup")
+async def startup_event():
+    """Load legal data when the server starts"""
+    load_legal_qa_data()
 
 @app.get("/")
 def home():
