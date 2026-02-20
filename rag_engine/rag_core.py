@@ -183,9 +183,10 @@ def _extract_query_terms(query: str):
 
     return query_terms, expanded_phrases
 
-def retrieve_clause(query):
+
+def _rank_candidates(query: str):
     if index is None or index.ntotal == 0 or not chunks_store:
-        return None, None
+        return []
 
     q_embedding = embedder.encode([query], convert_to_numpy=True)
     q_embedding = np.array(q_embedding, dtype=np.float32)
@@ -193,11 +194,10 @@ def retrieve_clause(query):
     distances, indices = index.search(q_embedding, k=candidate_count)
 
     if indices.size == 0:
-        return None, None
+        return []
 
     query_terms, expanded_phrases = _extract_query_terms(query)
-    best_candidate = None
-    best_knowledge_base_candidate = None
+    ranked = []
 
     for distance, chunk_idx in zip(distances[0], indices[0]):
         if chunk_idx < 0 or chunk_idx >= len(chunks_store):
@@ -213,24 +213,47 @@ def retrieve_clause(query):
         source_bonus = 0.03 if source == "legal_qa" else 0.0
         combined_score = confidence + (0.08 * keyword_hits) + (0.15 * phrase_hits) + source_bonus
 
-        total_lexical_hits = keyword_hits + phrase_hits
-        candidate = (combined_score, confidence, total_lexical_hits, clause_text, source)
-        if best_candidate is None or candidate[0] > best_candidate[0]:
-            best_candidate = candidate
-        if source == "legal_qa" and (best_knowledge_base_candidate is None or candidate[0] > best_knowledge_base_candidate[0]):
-            best_knowledge_base_candidate = candidate
+        ranked.append(
+            {
+                "combined_score": float(combined_score),
+                "retrieval_confidence": float(confidence),
+                "lexical_hits": int(keyword_hits + phrase_hits),
+                "clause": clause_text,
+                "source": source,
+            }
+        )
 
-    if best_candidate is None:
+    ranked.sort(key=lambda row: row["combined_score"], reverse=True)
+    return ranked
+
+
+def retrieve_candidate_clauses(query: str, top_k: int = 8):
+    ranked = _rank_candidates(query)
+    if not ranked:
+        return []
+    return ranked[: max(1, top_k)]
+
+def retrieve_clause(query):
+    ranked = _rank_candidates(query)
+    if not ranked:
         return None, None
 
-    _, best_confidence, best_lexical_hits, best_clause, best_source = best_candidate
+    best_candidate = ranked[0]
+    best_confidence = best_candidate["retrieval_confidence"]
+    best_lexical_hits = best_candidate["lexical_hits"]
+    best_clause = best_candidate["clause"]
+    best_source = best_candidate["source"]
     rounded_confidence = float(round(best_confidence, 2))
 
     if best_confidence < MIN_CONFIDENCE_SCORE and best_lexical_hits == 0:
         return None, rounded_confidence
 
+    best_knowledge_base_candidate = next((candidate for candidate in ranked if candidate["source"] == "legal_qa"), None)
+
     if best_knowledge_base_candidate is not None:
-        _, kb_confidence, kb_lexical_hits, kb_clause, _ = best_knowledge_base_candidate
+        kb_confidence = best_knowledge_base_candidate["retrieval_confidence"]
+        kb_lexical_hits = best_knowledge_base_candidate["lexical_hits"]
+        kb_clause = best_knowledge_base_candidate["clause"]
 
         if kb_clause != best_clause:
             merged_context = (
