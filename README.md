@@ -203,6 +203,33 @@ cd rag_engine
 python rag_test.py
 ```
 
+## 🖥️ Basic React Frontend
+
+A minimal React frontend is included in the `frontend/` folder with:
+
+- PDF upload control (calls `POST /upload`)
+- Chat bar with message history (calls `POST /ask`)
+
+### Run the frontend
+
+1. Start the backend first:
+   ```bash
+   cd rag_engine
+   uvicorn main:app --reload --host 0.0.0.0 --port 8000
+   ```
+
+2. In a new terminal, run the frontend:
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+
+3. Open:
+   - Frontend: http://localhost:5173
+
+The Vite dev server proxies API calls from `/api/*` to `http://localhost:8000/*`.
+
 ## 🛠️ Configuration
 
 ### Environment Variables
