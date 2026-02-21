@@ -1,0 +1,82 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+venv/
+.venv/
+env/
+frontend/
+
+
+# =========================
+# Model & AI Artifacts
+# =========================
+models/
+embeddings/
+vector_db/
+*.bin
+*.pt
+*.pth
+*.safetensors
+*.index
+
+# =========================
+# HuggingFace / LLM Cache
+# =========================
+.cache/
+.huggingface/
+**/.cache/
+**/huggingface/
+
+# =========================
+# Logs & Temp Files
+# =========================
+*.log
+*.tmp
+
+# =========================
+# OS / Editor Files
+# =========================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# =========================
+# FastAPI / Uvicorn
+# =========================
+*.sqlite3
+uvicorn.log
+
+# =========================
+# Test & Local Data
+# =========================
+test_docs/
+uploads/
+rag_engine/uploads/
+rag_engine/processed/
+legal-bert-finetune/output/
+
+# =========================
+# Node / Frontend (if added later)
+# =========================
+node_modules/
+dist/
+build/
+npm-debug.log*
+
+# =========================
+# Jupyter / Notebooks
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# API
+# =========================
+.env
+.env.*
