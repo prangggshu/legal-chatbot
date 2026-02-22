@@ -1,0 +1,26 @@
+{
+  "input": "D:\\legal-chatbot\\legal-bert-finetune\\data\\legal_qa.json",
+  "records_used": 300,
+  "examples_total": 600,
+  "splits": {
+    "train": 480,
+    "val": 60,
+    "test": 60
+  },
+  "label_counts": {
+    "train": {
+      "0": 234,
+      "1": 246
+    },
+    "val": {
+      "0": 32,
+      "1": 28
+    },
+    "test": {
+      "0": 34,
+      "1": 26
+    }
+  },
+  "negatives_per_positive": 1,
+  "seed": 42
+}
