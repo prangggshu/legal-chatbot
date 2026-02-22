@@ -59,11 +59,9 @@ async def startup_event():
     """Load persistent FAISS index or build from legal_qa.json on first run."""
     initialize_vector_db_from_legal_qa()
 
-
 @app.get("/")
 def home():
     return {"status": "Legal AI Backend Running"}
-
 
 @app.post("/ask")
 def ask_question(q: Question):
