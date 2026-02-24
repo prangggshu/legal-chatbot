@@ -8,6 +8,7 @@ import {
     askQuestion,
     uploadDocument,
     analyzeDocument,
+    summarizeDocument,
     loginUser,
     registerUser,
     verifyAuthToken,
@@ -287,6 +288,43 @@ function App() {
         }
     };
 
+    const handleSummarizeFile = async (file: File) => {
+        setIsLoading(true);
+        try {
+            await uploadDocument(file);
+            const result = await summarizeDocument();
+
+            if (result.status !== 'success' || !result.summary) {
+                throw new Error(result.detail || 'Failed to summarize document');
+            }
+
+            const summaryMessage: MessageType = {
+                id: Date.now().toString(),
+                role: 'assistant',
+                content: `Summary for "${file.name}":\n\n${result.summary}`,
+                timestamp: new Date(),
+                metadata: {
+                    answer_source: 'document_summary',
+                }
+            };
+
+            setSessions(prev => prev.map(s => {
+                if (s.id === currentSessionId) {
+                    return {
+                        ...s,
+                        messages: [...s.messages, summaryMessage],
+                        updatedAt: new Date()
+                    };
+                }
+                return s;
+            }));
+        } catch (error) {
+            alert('Failed to summarize document');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const handleNewChat = () => {
         const newSession: ChatSession = {
             id: Date.now().toString(),
@@ -444,6 +482,7 @@ function App() {
                     onSendMessage={handleSendMessage}
                     onUploadFile={handleUploadFile}
                     onAnalyzeFile={handleAnalyzeFile}
+                    onSummarizeFile={handleSummarizeFile}
                     disabled={isLoading}
                 />
             </main>

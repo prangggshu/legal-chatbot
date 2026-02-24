@@ -33,6 +33,12 @@ export interface RiskAnalysisResponse {
     }>;
 }
 
+export interface SummarizeResponse {
+    status: 'success' | 'error';
+    summary?: string;
+    detail?: string;
+}
+
 export const askQuestion = async (query: string): Promise<Partial<MessageType>> => {
     const response = await fetch(`${API_BASE}/ask`, {
         method: 'POST',
@@ -83,6 +89,18 @@ export const analyzeDocument = async (): Promise<RiskAnalysisResponse> => {
 
     if (!response.ok) {
         throw new Error('Failed to analyze document');
+    }
+
+    return await response.json();
+};
+
+export const summarizeDocument = async (): Promise<SummarizeResponse> => {
+    const response = await fetch(`${API_BASE}/summarize`, {
+        method: 'GET',
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to summarize document');
     }
 
     return await response.json();

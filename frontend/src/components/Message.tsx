@@ -1,5 +1,5 @@
-import React from 'react';
-import { Bot, User, Shield, AlertTriangle, Info } from 'lucide-react';
+import React, { useState } from 'react';
+import { Bot, User, Shield, AlertTriangle, Info, ScrollText, ChevronDown, ChevronUp } from 'lucide-react';
 import { MessageType } from '../types';
 import { motion } from 'framer-motion';
 import { clsx, type ClassValue } from 'clsx';
@@ -15,6 +15,16 @@ interface MessageProps {
 
 export const Message: React.FC<MessageProps> = ({ message }) => {
     const isBot = message.role === 'assistant';
+    const isSummaryMessage = message.metadata?.answer_source === 'document_summary';
+    const [isSummaryExpanded, setIsSummaryExpanded] = useState(true);
+
+    const summaryHeader = isSummaryMessage
+        ? message.content.split('\n\n')[0] || 'Document Summary'
+        : '';
+
+    const summaryBody = isSummaryMessage
+        ? message.content.split('\n\n').slice(1).join('\n\n').trim()
+        : '';
 
     return (
         <motion.div
@@ -42,9 +52,34 @@ export const Message: React.FC<MessageProps> = ({ message }) => {
                     <div className="text-xs font-bold uppercase text-[var(--text-secondary)]">
                         {isBot ? "Legal AI Advisor" : "You"}
                     </div>
-                    <div className="break-words whitespace-pre-wrap text-base text-[var(--text-primary)]">
-                        {message.content}
-                    </div>
+
+                    {isSummaryMessage ? (
+                        <div className="rounded-xl border border-indigo-500/30 bg-indigo-500/10 p-4">
+                            <div className="flex items-start justify-between gap-3">
+                                <div className="flex items-center gap-2 text-sm font-semibold text-indigo-300">
+                                    <ScrollText size={16} />
+                                    <span>{summaryHeader}</span>
+                                </div>
+                                <button
+                                    onClick={() => setIsSummaryExpanded(prev => !prev)}
+                                    className="inline-flex items-center gap-1 rounded-md border border-indigo-500/30 px-2 py-1 text-xs text-indigo-300 hover:bg-indigo-500/20"
+                                >
+                                    <span>{isSummaryExpanded ? 'Hide' : 'Show'}</span>
+                                    {isSummaryExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                                </button>
+                            </div>
+
+                            {isSummaryExpanded && (
+                                <div className="mt-3 break-words whitespace-pre-wrap text-sm text-[var(--text-primary)]">
+                                    {summaryBody || message.content}
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="break-words whitespace-pre-wrap text-base text-[var(--text-primary)]">
+                            {message.content}
+                        </div>
+                    )}
 
                     {isBot && message.metadata && (
                         <div className="mt-4 flex flex-wrap gap-2">
