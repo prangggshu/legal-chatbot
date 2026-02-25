@@ -13,7 +13,7 @@ from langchain_ollama import OllamaLLM  # LangChain wrapper for Ollama
 # temperature=0: Deterministic output (no randomness, same input = same output)
 # num_predict=120: Max tokens to generate (~120 words)
 llm = OllamaLLM(
-    model=\"llama3\",  # Model name (must be installed via `ollama pull llama3`)
+    model="llama3",  # Model name (must be installed via `ollama pull llama3`)
     temperature=0,  # 0 = deterministic, 1 = creative
     num_predict=120  # Max output length in tokens
 )
@@ -23,7 +23,7 @@ llm = OllamaLLM(
 # FUNCTION: Generate answer using local Ollama LLM
 # ==============================================================================
 def generate_local_answer(context: str, question: str) -> str:
-    \"\"\"
+    """
     Generate answer using local Ollama llama3 model.
     
     Args:
@@ -45,18 +45,18 @@ def generate_local_answer(context: str, question: str) -> str:
         - Smaller model than GPT-4/Gemini
         
     Prompt Strategy:
-        - Explicitly say \"Answer using ONLY the legal clause\"
+        - Explicitly say "Answer using ONLY the legal clause"
         - Allow explaining conditions/limitations (not just copy-paste)
-        - If insufficient info, say \"I cannot answer\"
+        - If insufficient info, say "I cannot answer"
         - Avoids general legal advice (only from provided context)
         
     Example:
-        context = \"Section 3: Payment due within 30 days\"
-        question = \"When is payment due?\"
-        answer = \"Payment is due within 30 days\"
-    \"\"\"
+        context = "Section 3: Payment due within 30 days"
+        question = "When is payment due?"
+        answer = "Payment is due within 30 days"
+    """
     # Construct prompt with clear instructions
-    prompt = f\"\"\"
+    prompt = f"""
 You are a legal assistant.
 
 Answer the user's question using ONLY the legal clause below.
@@ -65,7 +65,7 @@ Do NOT add information not present in the clause.
 Do NOT give general legal advice.
 
 If the clause does not contain any information relevant to the question, say:
-\"I cannot answer this from the provided document.\"
+"I cannot answer this from the provided document."
 
 Legal Clause:
 {context}
@@ -74,7 +74,7 @@ Question:
 {question}
 
 Answer in clear, simple language.
-\"\"\"
+"""
     # Invoke Ollama LLM with prompt
     # .invoke() sends prompt to Ollama server on localhost:11434
     # Returns generated text response

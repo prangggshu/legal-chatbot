@@ -191,9 +191,13 @@ legal-chatbot/
 
 The system automatically analyzes clauses for risk levels:
 
-- **High Risk**: Termination without notice, unfavorable terms
-- **Medium Risk**: Penalty clauses, liquidated damages
-- **Low Risk**: Standard legal provisions, jurisdiction clauses
+- **High Risk**: Criminal/enforcement exposure and severe terms (e.g., imprisonment/fine language, non-bailable, unlimited liability, coercion/voidness, immediate/default termination)
+- **Medium Risk**: Monetary/compliance and restrictive contractual controls (e.g., maintenance/penalty/fine language, sole discretion, arbitration/notice obligations, tax/regulatory terms)
+- **Low Risk**: Procedural/boilerplate drafting language (e.g., definitions, schedules/annexures, effective-date wording)
+
+Detection is rule-based and interpretable:
+- Keyword groups (`high_risk_keywords`, `medium_risk_keywords`, `low_risk_keywords`)
+- Regex triggers for common legal phrasings (e.g., `punishable\s+with\s+(imprisonment|fine)`, `liable\s+to\s+(pay|compensate)`)
 
 ## 🧪 Testing
 

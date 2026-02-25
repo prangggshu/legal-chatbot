@@ -5,12 +5,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface ChatInputProps {
     onSendMessage: (message: string) => void;
     onUploadFile: (file: File) => void;
-    onAnalyzeFile: (file: File) => void;
-    onSummarizeFile: (file: File) => void;
+    onAnalyzeFile: (file?: File) => void;
+    onSummarizeFile: (file?: File) => void;
+    hasUploadedDocument?: boolean;
     disabled?: boolean;
 }
 
-export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onUploadFile, onAnalyzeFile, onSummarizeFile, disabled }) => {
+export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onUploadFile, onAnalyzeFile, onSummarizeFile, hasUploadedDocument = false, disabled }) => {
     const [input, setInput] = useState('');
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -31,15 +32,15 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onUploadFil
     };
 
     const handleAnalyze = () => {
-        if (selectedFile && !disabled) {
-            onAnalyzeFile(selectedFile);
+        if (!disabled && (selectedFile || hasUploadedDocument)) {
+            onAnalyzeFile(selectedFile ?? undefined);
             setSelectedFile(null);
         }
     };
 
     const handleSummarize = () => {
-        if (selectedFile && !disabled) {
-            onSummarizeFile(selectedFile);
+        if (!disabled && (selectedFile || hasUploadedDocument)) {
+            onSummarizeFile(selectedFile ?? undefined);
             setSelectedFile(null);
         }
     };
@@ -123,34 +124,32 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onUploadFil
                     </button>
                 </div>
 
-                {selectedFile && (
-                    <div className="flex gap-2 px-1 pt-1">
-                        <button
-                            onClick={handleUpload}
-                            disabled={disabled}
-                            className="inline-flex items-center gap-1.5 rounded-md border border-[var(--border)] bg-[var(--glass-bg)] px-3 py-2 text-xs font-semibold text-[var(--text-primary)] hover:border-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                            <Upload size={16} />
-                            <span>Upload</span>
-                        </button>
-                        <button
-                            onClick={handleAnalyze}
-                            disabled={disabled}
-                            className="inline-flex items-center gap-1.5 rounded-md border border-[var(--border)] bg-[var(--glass-bg)] px-3 py-2 text-xs font-semibold text-[var(--text-primary)] hover:border-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                            <ShieldAlert size={16} />
-                            <span>Document Analyse</span>
-                        </button>
-                        <button
-                            onClick={handleSummarize}
-                            disabled={disabled}
-                            className="inline-flex items-center gap-1.5 rounded-md border border-[var(--border)] bg-[var(--glass-bg)] px-3 py-2 text-xs font-semibold text-[var(--text-primary)] hover:border-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                            <ScrollText size={16} />
-                            <span>Summarize</span>
-                        </button>
-                    </div>
-                )}
+                <div className="flex gap-2 px-1 pt-1">
+                    <button
+                        onClick={handleUpload}
+                        disabled={disabled || !selectedFile}
+                        className="inline-flex items-center gap-1.5 rounded-md border border-[var(--border)] bg-[var(--glass-bg)] px-3 py-2 text-xs font-semibold text-[var(--text-primary)] hover:border-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        <Upload size={16} />
+                        <span>Upload</span>
+                    </button>
+                    <button
+                        onClick={handleAnalyze}
+                        disabled={disabled || (!selectedFile && !hasUploadedDocument)}
+                        className="inline-flex items-center gap-1.5 rounded-md border border-[var(--border)] bg-[var(--glass-bg)] px-3 py-2 text-xs font-semibold text-[var(--text-primary)] hover:border-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        <ShieldAlert size={16} />
+                        <span>Document Analyse</span>
+                    </button>
+                    <button
+                        onClick={handleSummarize}
+                        disabled={disabled || (!selectedFile && !hasUploadedDocument)}
+                        className="inline-flex items-center gap-1.5 rounded-md border border-[var(--border)] bg-[var(--glass-bg)] px-3 py-2 text-xs font-semibold text-[var(--text-primary)] hover:border-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        <ScrollText size={16} />
+                        <span>Summarize</span>
+                    </button>
+                </div>
                 <div className="px-1 pb-1 pt-2 text-center text-[11px] text-[var(--text-secondary)]">
                     Legal AI may provide inaccurate information. Verify important legal matters.
                 </div>

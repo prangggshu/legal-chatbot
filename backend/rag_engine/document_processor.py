@@ -156,17 +156,17 @@ def chunk_text(text: str):
                     # This is a clause header
                     # If buffer has content and meets min size, save as chunk
                     if clause_buffer and len(clause_buffer.split()) >= MIN_CHUNK_WORDS:
-                        chunks.append(f\"{article_header} {clause_buffer.strip()}\")
+                        chunks.append(f"{article_header} {clause_buffer.strip()}")
                     
                     # Start new buffer with this clause number
                     clause_buffer = part
                 else:
                     # This is clause content text, add to buffer
-                    clause_buffer += \" \" + part
+                    clause_buffer += " " + part
 
             # Save final clause buffer if it meets minimum size
             if clause_buffer and len(clause_buffer.split()) >= MIN_CHUNK_WORDS:
-                chunks.append(f\"{article_header} {clause_buffer.strip()}\")
+                chunks.append(f"{article_header} {clause_buffer.strip()}")
 
 
     # ==============================================================================

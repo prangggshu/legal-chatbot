@@ -16,20 +16,20 @@ load_dotenv()
 
 # Initialize Gemini client with API key from environment
 # Get your key at: https://makersuite.google.com/
-client = genai.Client(api_key=os.getenv(\"GEMINI_API_KEY\"))
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 # Model selection: gemini-2.5-flash
 # - Fast: 1-3 second responses
 # - Cost-effective: $0.0001 per prompt
 # - Quality: Excellent for Q&A and summarization
-MODEL_NAME = \"gemini-2.5-flash\"
+MODEL_NAME = "gemini-2.5-flash"
 
 
 # ==============================================================================
 # FUNCTION: Generate answer from context using Gemini
 # ==============================================================================
 def generate_gemini_answer(context: str, question: str) -> str:
-    \"\"\"
+    """
     Generate answer to question using only provided context.
     
     Args:
@@ -40,24 +40,24 @@ def generate_gemini_answer(context: str, question: str) -> str:
         Generated answer text (2-3 sentences typically)
         
     Prompt Strategy:
-        - Explicitly instruct: \"Answer using ONLY the legal clause below\"
+        - Explicitly instruct: "Answer using ONLY the legal clause below"
         - Prevents hallucination (making up information)
-        - If context insufficient, LLM says \"not enough information\"
+        - If context insufficient, LLM says "not enough information"
         - Clear, professional legal assistant tone
         
     Example:
-        context = \"Section 5: Employee must provide 30 days notice\"
-        question = \"What is the notice period?\"
-        answer = \"30 days\"
+        context = "Section 5: Employee must provide 30 days notice"
+        question = "What is the notice period?"
+        answer = "30 days"
         
     Security:
         - Context is from user's document (already uploaded)
         - No sensitive data leaked (only sent what user uploaded)
         - API key required (don't commit to git)
-    \"\"\"
+    """
     # Construct prompt with clear instructions
     # Triple quotes allow multi-line string
-    prompt = f\"\"\"
+    prompt = f"""
 You are a legal assistant.
 
 Answer the user's question using ONLY the legal clause below.
@@ -70,7 +70,7 @@ Question:
 {question}
 
 Answer clearly.
-\"\"\"
+"""
     # Call Gemini API
     # model= specifies which model to use
     # contents= is the prompt text

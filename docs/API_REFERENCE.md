@@ -261,10 +261,13 @@ GET /analyze
 - No request body required
 - Scans all chunks from most recent upload
 - Non-Gemini operation (local keyword-based detection)
-- Risk detection keyword matching:
-  - High: "without notice", "terminate"
-  - Medium: "penalty", "liquidated damages"
-  - Low: "jurisdiction", "governing law"
+- Risk detection uses keyword + regex matching in `risk_engine.py`
+- High risk examples: `rigorous imprisonment`, `non-bailable`, `void ab initio`, `unlimited liability`, `liable to prosecution`
+- Medium risk examples: `one lakh rupees`, `late payment fee`, `at the sole discretion`, `subject to arbitration`, `tds shall be deducted`
+- Low risk examples: `whereas`, `annexure`, `effective date`, `provided that`
+- Regex triggers:
+  - High: `punishable\s+with\s+(imprisonment|fine)`, `notwithstanding\s+anything`
+  - Medium: `liable\s+to\s+(pay|compensate)`, `at\s+the\s+sole\s+discretion`
 
 ---
 

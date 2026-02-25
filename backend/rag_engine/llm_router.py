@@ -65,11 +65,11 @@ def generate_answer(context: str, question: str) -> str:
         else:
             # Ollama was slow (> 4 seconds)
             # Print debug message and fall through to Gemini
-            print(\"Local LLM slow → switching to Gemini\")
+            print("Local LLM slow → switching to Gemini")
     except Exception as e:
         # Local LLM failed (not running, network error, etc.)
         # Print debug message and fall through to Gemini
-        print(\"Local LLM failed → switching to Gemini:\", e)
+        print("Local LLM failed → switching to Gemini:", e)
 
     # If we reach here, Ollama timed out or failed
     # Fall back to Gemini API (cloud)

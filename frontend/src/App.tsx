@@ -32,6 +32,7 @@ function App() {
     const [sessions, setSessions] = useState<ChatSession[]>([]);
     const [currentSessionId, setCurrentSessionId] = useState<string>('');
     const [isLoading, setIsLoading] = useState(false);
+    const [uploadedDocumentName, setUploadedDocumentName] = useState('');
 
     const handleAuthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -211,6 +212,7 @@ function App() {
         setIsLoading(true);
         try {
             const result = await uploadDocument(file);
+            setUploadedDocumentName(file.name);
             const systemMessage: MessageType = {
                 id: Date.now().toString(),
                 role: 'assistant',
@@ -235,12 +237,16 @@ function App() {
         }
     };
 
-    const handleAnalyzeFile = async (file: File) => {
+    const handleAnalyzeFile = async (file?: File) => {
         setIsLoading(true);
         try {
-            await uploadDocument(file);
+            if (file) {
+                await uploadDocument(file);
+                setUploadedDocumentName(file.name);
+            }
             const result = await analyzeDocument();
             const summary = result.summary;
+            const documentName = file?.name || uploadedDocumentName || 'current document';
             const sectionText = result.risk_sections.length > 0
                 ? `\n\nRisk area details:\n${result.risk_sections
                     .map(section => [
@@ -260,7 +266,7 @@ function App() {
             const systemMessage: MessageType = {
                 id: Date.now().toString(),
                 role: 'assistant',
-                content: `Document "${file.name}" uploaded and risk analysis completed.\nTotal sections: ${summary.total_chunks}\nFlagged sections: ${summary.risk_sections}\nHigh risk: ${summary.high_risk}\nMedium risk: ${summary.medium_risk}${sectionText}`,
+                content: `Risk analysis completed for "${documentName}".\nTotal sections: ${summary.total_chunks}\nFlagged sections: ${summary.risk_sections}\nHigh risk: ${summary.high_risk}\nMedium risk: ${summary.medium_risk}${sectionText}`,
                 timestamp: new Date(),
                 metadata: {
                     risk_level: overallRisk,
@@ -288,11 +294,15 @@ function App() {
         }
     };
 
-    const handleSummarizeFile = async (file: File) => {
+    const handleSummarizeFile = async (file?: File) => {
         setIsLoading(true);
         try {
-            await uploadDocument(file);
+            if (file) {
+                await uploadDocument(file);
+                setUploadedDocumentName(file.name);
+            }
             const result = await summarizeDocument();
+            const documentName = file?.name || uploadedDocumentName || 'current document';
 
             if (result.status !== 'success' || !result.summary) {
                 throw new Error(result.detail || 'Failed to summarize document');
@@ -301,7 +311,7 @@ function App() {
             const summaryMessage: MessageType = {
                 id: Date.now().toString(),
                 role: 'assistant',
-                content: `Summary for "${file.name}":\n\n${result.summary}`,
+                content: `Summary for "${documentName}":\n\n${result.summary}`,
                 timestamp: new Date(),
                 metadata: {
                     answer_source: 'document_summary',
@@ -483,6 +493,7 @@ function App() {
                     onUploadFile={handleUploadFile}
                     onAnalyzeFile={handleAnalyzeFile}
                     onSummarizeFile={handleSummarizeFile}
+                    hasUploadedDocument={Boolean(uploadedDocumentName)}
                     disabled={isLoading}
                 />
             </main>

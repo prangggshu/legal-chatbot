@@ -556,21 +556,40 @@ Multi-level chunking strategy:
 
 #### `detect_risk(clause_text) → {risk_level, risk_reason}`
 
-Simple keyword-based detection (can be enhanced):
+Keyword + regex based detection (v1.1):
 
 ```python
-if "without notice" or "terminate" in text:
-  return High: "Employer can terminate without prior notice"
+if any(high_risk_keywords) or any(high_risk_patterns):
+  return High: "Severe legal risk..."
 
-if "penalty" or "liquidated damages" in text:
-  return Medium: "Financial penalty imposed"
+if any(medium_risk_keywords) or any(medium_risk_patterns):
+  return Medium: "Monetary/compliance risk..."
 
-if "jurisdiction" or "governing law" in text:
+if any(low_risk_keywords):
   return Low: "Standard legal clause"
 
 else:
   return Low: "No significant legal risk detected"
 ```
+
+**High Risk Indicators (examples):**
+- Criminal/enforcement: `rigorous imprisonment`, `cognizable`, `non-bailable`, `liable to prosecution`
+- Severe contractual risk: `unlimited liability`, `summary termination`, `termination for default`, `with immediate effect`
+- Invalidity/coercion: `void ab initio`, `null and void`, `coercion`, `undue influence`, `fraudulent`
+- Indian law references: `section 420 of ipc`, `section 406 of ipc`, `under pocso act`, `ndps act`
+
+**Medium Risk Indicators (examples):**
+- Financial/commercial: `fine which may extend`, `one lakh rupees`, `late payment fee`, `interest at the rate of`
+- Contract controls: `at the sole discretion`, `prior written notice`, `written consent`, `subject to arbitration`
+- Regulatory/compliance: `tds shall be deducted`, `as per income tax act`, `subject to rbi guidelines`
+
+**Low Risk Indicators (examples):**
+- Boilerplate and drafting: `whereas`, `now therefore`, `annexure`, `appendix`
+- Interpretation/procedural: `provided that`, `unless the context otherwise requires`, `effective date`
+
+**Regex Triggers:**
+- High: `punishable\s+with\s+(imprisonment|fine)`, `notwithstanding\s+anything`
+- Medium: `liable\s+to\s+(pay|compensate)`, `at\s+the\s+sole\s+discretion`
 
 **Returns:**
 ```json
