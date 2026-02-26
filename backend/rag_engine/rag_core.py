@@ -116,14 +116,180 @@ STOP_WORDS = {
 # Example: "it law" → expands to ["information technology", "cyber", ...]
 #          Catches documents that use full terms instead of abbreviations
 QUERY_PHRASE_EXPANSIONS = {
+    # ================= IT / CYBER LAW =================
     "it law": [
         "information technology",
         "information technology act",
-        "cyber",
+        "it act 2000",
+        "cyber law",
         "electronic record",
         "digital signature",
-        "computer"
-    ]
+        "electronic signature",
+        "computer resource",
+        "cyber crime",
+        "data protection",
+        "intermediary liability",
+    ],
+
+    "cyber crime": [
+        "computer related offence",
+        "unauthorized access",
+        "hacking",
+        "identity theft",
+        "phishing",
+        "data breach",
+        "online fraud",
+    ],
+
+    # ================= CONTRACT LAW =================
+    "breach of contract": [
+        "material breach",
+        "fundamental breach",
+        "default",
+        "non-performance",
+        "failure to perform",
+        "repudiation",
+    ],
+
+    "indemnity": [
+        "indemnify",
+        "hold harmless",
+        "compensate against loss",
+        "defend and indemnify",
+    ],
+
+    "liquidated damages": [
+        "pre-estimated damages",
+        "agreed damages",
+        "penalty clause",
+        "compensation payable",
+    ],
+
+    # ================= ARBITRATION =================
+    "arbitration": [
+        "arbitral tribunal",
+        "sole arbitrator",
+        "arbitration and conciliation act",
+        "dispute resolution",
+        "binding arbitration",
+        "seat of arbitration",
+        "venue of arbitration",
+    ],
+
+    "jurisdiction": [
+        "courts at",
+        "exclusive jurisdiction",
+        "territorial jurisdiction",
+        "subject to jurisdiction",
+    ],
+
+    # ================= EMPLOYMENT LAW =================
+    "termination": [
+        "terminate",
+        "termination of employment",
+        "dismissal",
+        "removal from service",
+        "discharge",
+        "separation",
+    ],
+
+    "non compete": [
+        "restrictive covenant",
+        "restraint of trade",
+        "shall not engage",
+        "shall not compete",
+    ],
+
+    "confidentiality": [
+        "confidential information",
+        "non disclosure",
+        "nda",
+        "proprietary information",
+        "trade secrets",
+    ],
+
+    # ================= PROPERTY / RENT =================
+    "lease": [
+        "lease deed",
+        "rent agreement",
+        "tenancy",
+        "lessor",
+        "lessee",
+        "demised premises",
+    ],
+
+    "eviction": [
+        "vacate the premises",
+        "ejectment",
+        "recovery of possession",
+        "hand over vacant possession",
+    ],
+
+    # ================= FAMILY LAW =================
+    "maintenance": [
+        "alimony",
+        "monthly maintenance",
+        "financial support",
+        "interim maintenance",
+        "permanent alimony",
+    ],
+
+    "child custody": [
+        "custody of minor",
+        "guardianship",
+        "visitation rights",
+        "parental custody",
+    ],
+
+    # ================= CRIMINAL LAW =================
+    "cheating": [
+        "section 420",
+        "dishonest inducement",
+        "fraudulently",
+        "cheat and dishonestly",
+    ],
+
+    "criminal breach of trust": [
+        "section 406",
+        "misappropriation",
+        "entrusted property",
+        "dishonest misappropriation",
+    ],
+
+    # ================= CORPORATE / COMPLIANCE =================
+    "company law": [
+        "companies act 2013",
+        "board of directors",
+        "shareholders",
+        "memorandum of association",
+        "articles of association",
+        "corporate governance",
+    ],
+
+    "insolvency": [
+        "ibc",
+        "insolvency and bankruptcy code",
+        "corporate insolvency resolution process",
+        "cirp",
+        "liquidation",
+        "moratorium",
+    ],
+
+    # ================= TAXATION =================
+    "gst": [
+        "goods and services tax",
+        "input tax credit",
+        "gst act",
+        "output tax",
+        "reverse charge",
+    ],
+
+    "tds": [
+        "tax deducted at source",
+        "withholding tax",
+        "income tax act",
+        "deduction of tax",
+    ],
 }
 
 # ==============================================================================
@@ -136,16 +302,150 @@ QUERY_PHRASE_EXPANSIONS = {
 # 
 # Scoring impact: Synonym matches add +0.06 to score (query expansion boost)
 LEGAL_SYNONYMS = {
-    "liability": ["liable", "responsible", "accountability", "obligation"],
-    "indemnity": ["indemnification", "indemnify", "indemnification clause"],
-    "breach": ["violation", "non-compliance", "default", "infringement"],
-    "termination": ["terminate", "ending", "cancellation", "cessation"],
-    "confidential": ["confidentiality", "secret", "proprietary", "non-disclosure"],
-    "clause": ["section", "article", "provision", "condition", "term"],
-    "penalty": ["penality", "fine", "damages", "liquidated damages"],
-    "jurisdiction": ["jurisdiction", "governing law", "applicable law"],
-    "liability cap": ["limitation of liability", "liability limit", "cap on damages"],
-    "force majeure": ["act of god", "unforeseen circumstances"],
+    # ================= LIABILITY =================
+    "liability": [
+        "liable",
+        "responsible",
+        "accountable",
+        "accountability",
+        "legal responsibility",
+        "financial responsibility",
+        "obligation",
+        "duty to pay",
+    ],
+
+    "liability cap": [
+        "limitation of liability",
+        "liability limit",
+        "cap on damages",
+        "maximum liability",
+        "aggregate liability",
+        "liability shall not exceed",
+    ],
+
+    # ================= INDEMNITY =================
+    "indemnity": [
+        "indemnification",
+        "indemnify",
+        "hold harmless",
+        "defend and indemnify",
+        "keep indemnified",
+        "indemnity clause",
+    ],
+
+    # ================= BREACH =================
+    "breach": [
+        "violation",
+        "non-compliance",
+        "default",
+        "infringement",
+        "failure to perform",
+        "material breach",
+        "fundamental breach",
+    ],
+
+    # ================= TERMINATION =================
+    "termination": [
+        "terminate",
+        "termination of agreement",
+        "ending",
+        "cancellation",
+        "cessation",
+        "rescission",
+        "revocation",
+        "discharge",
+    ],
+
+    # ================= CONFIDENTIALITY =================
+    "confidential": [
+        "confidentiality",
+        "confidential information",
+        "secret",
+        "proprietary",
+        "non-disclosure",
+        "nda",
+        "trade secret",
+    ],
+
+    # ================= CLAUSE STRUCTURE =================
+    "clause": [
+        "section",
+        "article",
+        "provision",
+        "condition",
+        "term",
+        "sub-clause",
+        "subsection",
+        "schedule",
+    ],
+
+    # ================= PENALTY / DAMAGES =================
+    "penalty": [
+        "penality",  # common typo kept intentionally
+        "fine",
+        "damages",
+        "liquidated damages",
+        "monetary penalty",
+        "financial penalty",
+        "compensation payable",
+    ],
+
+    # ================= JURISDICTION =================
+    "jurisdiction": [
+        "governing law",
+        "applicable law",
+        "exclusive jurisdiction",
+        "courts at",
+        "subject to jurisdiction",
+        "territorial jurisdiction",
+    ],
+
+    # ================= FORCE MAJEURE =================
+    "force majeure": [
+        "act of god",
+        "unforeseen circumstances",
+        "events beyond control",
+        "beyond reasonable control",
+        "natural calamity",
+    ],
+
+    # ================= ARBITRATION =================
+    "arbitration": [
+        "arbitral tribunal",
+        "sole arbitrator",
+        "binding arbitration",
+        "arbitration proceedings",
+        "arbitration and conciliation act",
+        "dispute resolution",
+    ],
+
+    # ================= NOTICE =================
+    "notice": [
+        "written notice",
+        "prior notice",
+        "notice period",
+        "serve notice",
+        "notification",
+    ],
+
+    # ================= PAYMENT =================
+    "payment": [
+        "payable",
+        "amount due",
+        "fees",
+        "charges",
+        "consideration",
+        "remittance",
+    ],
+
+    # ================= COMPLIANCE =================
+    "compliance": [
+        "comply with",
+        "in accordance with",
+        "as per",
+        "pursuant to",
+        "subject to compliance",
+    ],
 }
 
 # ==============================================================================
@@ -181,14 +481,76 @@ def _correct_query_spelling(query: str) -> str:
     # Common typos in legal contexts
     # Format: regex pattern → correct spelling
     typo_corrections = {
-        r'\bliabl\b': 'liable',  # Missing 'e'
-        r'\bindemnity\b': 'indemnity',  # Captures misspellings
-        r'\bbreatch\b': 'breach',  # Common typo ("breach" + "catch")
-        r'\btermiate\b': 'terminate',  # Transposed letters
-        r'\bclause\b': 'clause',  # Baseline (no correction needed)
-        r'\bpennalty\b': 'penalty',  # Double 'n' typo
-        r'\bjurisdiction\b': 'jurisdiction',  # Baseline
-    }
+    # ================= LIABILITY =================
+    r'\bliabl\b': 'liable',
+    r'\bliablity\b': 'liability',
+    r'\bliabilty\b': 'liability',
+    r'\bliablility\b': 'liability',
+
+    # ================= INDEMNITY =================
+    r'\bindemity\b': 'indemnity',
+    r'\bindeminty\b': 'indemnity',
+    r'\bindemification\b': 'indemnification',
+    r'\bindemnfication\b': 'indemnification',
+    r'\bindemnifcation\b': 'indemnification',
+
+    # ================= BREACH =================
+    r'\bbreatch\b': 'breach',
+    r'\bbreech\b': 'breach',
+    r'\bbrech\b': 'breach',
+
+    # ================= TERMINATION =================
+    r'\btermiate\b': 'terminate',
+    r'\bterminte\b': 'terminate',
+    r'\bterminaton\b': 'termination',
+    r'\bterminaton\b': 'termination',
+    r'\bterminaton of agreement\b': 'termination of agreement',
+
+    # ================= CONFIDENTIAL =================
+    r'\bconfidencial\b': 'confidential',
+    r'\bconfidentail\b': 'confidential',
+    r'\bconfidentialy\b': 'confidentially',
+    r'\bconfidantial\b': 'confidential',
+
+    # ================= CLAUSE =================
+    r'\bclasue\b': 'clause',
+    r'\bcluase\b': 'clause',
+    r'\bclausee\b': 'clause',
+
+    # ================= PENALTY =================
+    r'\bpennalty\b': 'penalty',
+    r'\bpenatly\b': 'penalty',
+    r'\bpenality\b': 'penalty',
+    r'\bpanalty\b': 'penalty',
+
+    # ================= JURISDICTION =================
+    r'\bjurisdication\b': 'jurisdiction',
+    r'\bjuristiction\b': 'jurisdiction',
+    r'\bjurisdicion\b': 'jurisdiction',
+    r'\bjuristdiction\b': 'jurisdiction',
+
+    # ================= ARBITRATION =================
+    r'\barbitartion\b': 'arbitration',
+    r'\barbitation\b': 'arbitration',
+    r'\barbitrtion\b': 'arbitration',
+
+    # ================= AGREEMENT =================
+    r'\baggreement\b': 'agreement',
+    r'\bagreement\b': 'agreement',  # OCR duplicate
+    r'\bagreemet\b': 'agreement',
+
+    # ================= NOTICE =================
+    r'\bnotce\b': 'notice',
+    r'\bnotcie\b': 'notice',
+    r'\bnoitce\b': 'notice',
+
+    # ================= OCR-SPECIFIC LEGAL ERRORS =================
+    r'\bsecton\b': 'section',
+    r'\bsectoin\b': 'section',
+    r'\bsectlon\b': 'section',  # l vs i OCR
+    r'\b0f\b': 'of',            # zero instead of 'o'
+    r'\b1aw\b': 'law',          # OCR error
+}
     
     # Apply each correction
     for typo, correct in typo_corrections.items():
